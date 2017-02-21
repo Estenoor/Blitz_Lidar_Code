@@ -27,8 +27,33 @@ int FRC::LidarManager::getDistance()
 	{
 		Lydar->ReadOnly(1, busyRead);
 	}
-	while (busyRead &! 1);
+	while ((int)busyRead & 0x01);
 	Lydar->WriteBulk(&LIDAR_ADDR[3], 1);
 	Lydar->ReadOnly(2, readData);
-	return ((readData[0] * 265) + readData[1]);
+	int distCent = ((readData[0] * 265) + readData[1]);
+	return (distCent / 100); //Converts centimeters into meters
+}
+
+void FRC::LidarManager::antiDavid(int offset, double slowPoint)
+{
+	if (getDistance() <= 9)
+	{
+		do
+		{
+			motorControl((getDistance() / slowPoint) * inputVal);
+		}
+		while(getDistance() >= 3);
+	}
+	else
+	{
+		return;
+	}
+}
+
+void FRC::LidarManager::motorControl(double speed)
+{
+	LeftFront.Set(speed);
+	LeftBack.Set(speed);
+	RightFront.Set(speed);
+	RightBack.Set(speed);
 }

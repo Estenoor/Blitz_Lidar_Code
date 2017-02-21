@@ -26,13 +26,15 @@ namespace FRC
 		uint8_t LIDAR_ADDR[4] {0x00, 0x04, 0x01, 0x8f};
 		uint8_t busyRead[1];
 		uint8_t readData[2];
+		const double inputVal = 1;
 
 	public:
 		LidarManager();
 
 		int getDistance();
 
-		void dontHitWall(int slowDistance, int stopDistance);
+		void antiDavid(int offset, double slowPoint);
+		void motorControl(double speed);
 	};
 }
 
