@@ -5,13 +5,14 @@
 #include <DigitalInput.h>
 #include <Talon.h>
 
-
-namespace FRC {
-
-	class manipulator {
+namespace FRC
+{
+	class manipulator
+	{
 		public:
 			manipulator();
-			//Gear functions
+
+			//Object Declarations
 			CANTalon gear;
 			Talon ball, climbMotor;
 			DigitalInput GearSwitch;
@@ -22,16 +23,7 @@ namespace FRC {
 			void GearOut(double speed);
 			void ballEject();
 			void climb();
-
-		private:
-
 	};
 }
 
-
-
 #endif
-
-
-
-

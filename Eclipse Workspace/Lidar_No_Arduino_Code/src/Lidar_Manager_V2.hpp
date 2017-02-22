@@ -11,6 +11,8 @@
 #include "WPILib.h"
 #include "CANTalon.h"
 #include "math.h"
+#include "inputManager.hpp"
+#include "driveManager.hpp"
 
 namespace FRC
 {
@@ -21,6 +23,7 @@ namespace FRC
 		CANTalon LeftBack;
 		CANTalon RightFront;
 		CANTalon RightBack;
+		FRC::driveManager driveManager;
 		FRC::LidarManager *Lidar;
 		I2C *Lydar = new I2C(I2C::kOnboard, 0x62);
 		uint8_t LIDAR_ADDR[4] {0x00, 0x04, 0x01, 0x8f};
@@ -34,10 +37,8 @@ namespace FRC
 		int getLidDistance();
 
 		void antiDavid(int offset, double slowPoint);
-		void motorControl(double speed);
 	};
 }
-
 
 
 #endif /* SRC_LIDAR_MANAGER_V2_HPP_ */

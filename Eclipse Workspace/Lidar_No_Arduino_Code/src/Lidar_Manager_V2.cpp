@@ -19,6 +19,7 @@ Lidar()
 
 }
 
+//Grabs Distance values form Lidar then converts from centimeters to meters
 int FRC::LidarManager::getLidDistance()
 {
 	Lydar->WriteBulk(LIDAR_ADDR, 2);
@@ -34,26 +35,17 @@ int FRC::LidarManager::getLidDistance()
 	return (distCent / 100); //Converts centimeters into meters
 }
 
+//Stops Robot from running into a wall/flat surface
 void FRC::LidarManager::antiDavid(int offset, double slowPoint)
 {
 	if (getLidDistance() <= 9)
 	{
 		do
 		{
-			motorControl((getLidDistance() / slowPoint) * inputVal);
+			double xVal = ((getLidDistance() / slowPoint) * driveManager.JoyX);
+			driveManager.mecanumDrive(0, xVal, 0.00, false);
 		}
 		while(getLidDistance() >= 3);
+		driveManager.mecanumDrive(0, 0, 0, false);
 	}
-	else
-	{
-		return;
-	}
-}
-
-void FRC::LidarManager::motorControl(double speed)
-{
-	LeftFront.Set(speed);
-	LeftBack.Set(speed);
-	RightFront.Set(speed);
-	RightBack.Set(speed);
 }
