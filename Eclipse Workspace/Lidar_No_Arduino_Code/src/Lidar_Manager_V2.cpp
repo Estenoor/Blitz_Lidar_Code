@@ -19,7 +19,7 @@ Lidar()
 
 }
 
-int FRC::LidarManager::getDistance()
+int FRC::LidarManager::getLidDistance()
 {
 	Lydar->WriteBulk(LIDAR_ADDR, 2);
 	Lydar->WriteBulk(&LIDAR_ADDR[2], 1);
@@ -36,13 +36,13 @@ int FRC::LidarManager::getDistance()
 
 void FRC::LidarManager::antiDavid(int offset, double slowPoint)
 {
-	if (getDistance() <= 9)
+	if (getLidDistance() <= 9)
 	{
 		do
 		{
-			motorControl((getDistance() / slowPoint) * inputVal);
+			motorControl((getLidDistance() / slowPoint) * inputVal);
 		}
-		while(getDistance() >= 3);
+		while(getLidDistance() >= 3);
 	}
 	else
 	{

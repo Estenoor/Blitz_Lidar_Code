@@ -31,7 +31,7 @@ namespace FRC
 	public:
 		LidarManager();
 
-		int getDistance();
+		int getLidDistance();
 
 		void antiDavid(int offset, double slowPoint);
 		void motorControl(double speed);
