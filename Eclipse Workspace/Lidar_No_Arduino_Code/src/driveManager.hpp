@@ -10,11 +10,13 @@ namespace FRC {
 
 	class driveManager {
 		public:
+
 		//Declare Objects
 		driveManager();
 		CANTalon leftBackM, leftFrontM, rightBackM, rightFrontM; //enc: 3024 counts / 1 rev
 		AHRS ahrs;
 		FRC::inputManager inputManager;
+
 		//Declare Functions
 		void PIcorrection(int id);
 		void mecanumDrive(double x, double y, double rotate, bool bypass);

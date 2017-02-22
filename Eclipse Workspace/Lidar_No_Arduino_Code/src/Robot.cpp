@@ -201,13 +201,6 @@ public:
 			SmartDashboard::PutNumber("RightFront Pos", driveMan.rightFrontM.GetEncPosition());
 			SmartDashboard::PutNumber("RightBack Pos", driveMan.rightBackM.GetEncPosition());
 			SmartDashboard::PutNumber("gear Pos", manipulator.gear.GetEncPosition());
-
-			SmartDashboard::PutNumber("LeftFront distance", driveMan.getDistance(driveMan.leftFrontM.GetEncPosition()));
-			SmartDashboard::PutNumber("LeftBack distance", driveMan.getDistance(driveMan.leftBackM.GetEncPosition()));
-			SmartDashboard::PutNumber("RightFront distance", driveMan.getDistance(driveMan.rightFrontM.GetEncPosition()));
-			SmartDashboard::PutNumber("RightBack distance", driveMan.getDistance(driveMan.rightBackM.GetEncPosition()));
-
-
 		}
 	}
 
