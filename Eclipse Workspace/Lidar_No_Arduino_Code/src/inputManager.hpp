@@ -3,24 +3,16 @@
 #include "WPILib.h"
 
 
-namespace FRC {
-
-	class inputManager {
+namespace FRC
+{
+	class inputManager
+	{
 		public:
 			inputManager();
+
 			//Declares objects
 			Joystick JoyStick, xBox;
-			//Declare Functions
-			//R.I.P. inputManager functions
-		private:
-
 	};
 }
 
-
-
 #endif
-
-
-
-

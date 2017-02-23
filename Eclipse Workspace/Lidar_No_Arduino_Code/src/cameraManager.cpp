@@ -12,7 +12,8 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/core/types.hpp"
 
-void FRC::cameraManager::VisionThread() {
+void FRC::cameraManager::VisionThread()
+{
 	cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera("10.51.48.11");
 	camera.SetResolution(640,480);
 	camera.SetFPS(30);
@@ -21,8 +22,10 @@ void FRC::cameraManager::VisionThread() {
 	cs::CvSource outputStream = CameraServer::GetInstance()->PutVideo("Rectangle", 640, 480);
 	cv::Mat mat;
 
-	while (true) {
-		if (cvSink.GrabFrame(mat) == 0) {
+	while (true)
+	{
+		if (cvSink.GrabFrame(mat) == 0)
+		{
 			outputStream.NotifyError(cvSink.GetError());
 			continue;
 		}

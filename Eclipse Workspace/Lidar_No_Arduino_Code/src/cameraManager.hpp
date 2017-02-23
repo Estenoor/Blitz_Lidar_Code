@@ -6,10 +6,13 @@
  */
 #ifndef SRC_CAMERAMANAGER_HPP_
 #define SRC_CAMERAMANAGER_HPP_
+
 #include "WPILib.h"
 
-namespace FRC {
-	class cameraManager {
+namespace FRC
+{
+	class cameraManager
+	{
 	public:
 		cameraManager();
 		void VisionThread();
