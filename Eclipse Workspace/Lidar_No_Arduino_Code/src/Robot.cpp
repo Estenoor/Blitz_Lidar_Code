@@ -4,15 +4,19 @@
 #include "driveManager.hpp"
 #include "manipulator.hpp"
 #include "cameraManager.hpp"
+#include "arduinoManager.hpp"
+#include "Lidar_Manager_V2.hpp"
 
 class Robot: public SampleRobot
 {
 	FRC::inputManager inputMan;
 	FRC::driveManager driveMan;
 	FRC::manipulator manipulator;
+	FRC::LidarManager Lidar;
 	//FRC::cameraManager cameraMan;
 	Relay spike;
 	Timer *lightTimer;
+	FRC::Arduino DSTemp;
 
 public:
 	Robot() :
@@ -20,9 +24,23 @@ public:
 		driveMan(),
 		manipulator(),
 		//cameraMan(),
-		spike(0)
+		spike(0),
+		DSTemp(0x01),
+		Lidar()
+
 {
 
+}
+
+void Autonomous()
+{
+	while (IsEnabled() && IsAutonomous())
+	{
+		bool isAuto = true;
+		SmartDashboard::PutBoolean("isAuto", isAuto);
+		Lidar.ProportionalSlowAntiDavid(3, 1.2, 0.5);
+
+	}
 }
 
 
@@ -47,6 +65,7 @@ void OperatorControl()
 	{
 		//Controls Led Strip
 		spike.Set(Relay::kForward);
+
 		/*
 		if (lightTimer->Get() / 5 == 1)
 		{
@@ -138,15 +157,20 @@ void OperatorControl()
 			manipulator.ball.Set(0);
 		}
 
-		/*if(inputMan.JoyStick.GetRawButton(2) && pulse <= 3024){
+		/*
+		if(inputMan.JoyStick.GetRawButton(2) && pulse <= 3024)
+		{
 			pulse = driveMan.leftBackM.GetEncPosition();
 			run = true;
-		}else if(!run){
+		}
+		else if(!run)
+		{
 			driveMan.leftBackM.SetEncPosition(0);
 			driveMan.leftFrontM.SetEncPosition(0);
 			driveMan.rightBackM.SetEncPosition(0);
 			driveMan.rightFrontM.SetEncPosition(0);
-		}*/
+		}
+		/**/
 
 		//Directional Control
 		if(inputMan.JoyStick.GetRawAxis(3) > 0)
@@ -171,12 +195,21 @@ void OperatorControl()
 		}
 		Wait(0.005);
 
+		double tempArray[4];
+		std::string valArray[4] {"LeftFront", "LeftBack", "RightBack", "RightFront"};
+		DSTemp.getTemp(tempArray);
+		for (int a = 0; a < 4; a++)
+		{
+			SmartDashboard::PutNumber(valArray[a], tempArray[a]);
+		}
+
 		//JoySticks(postRamp)
 		SmartDashboard::PutNumber("JoyX", driveMan.JoyX);
 		SmartDashboard::PutNumber("JoyY", driveMan.JoyY);
 		SmartDashboard::PutNumber("joyRotate", driveMan.joyRotate);
 		SmartDashboard::PutBoolean("GearSwitch", manipulator.GearSwitch.Get());
 		SmartDashboard::PutNumber("Average Distance", driveMan.getEncDistance());
+
 		//Raw JoySticks
 		SmartDashboard::PutNumber("JoyXRaw", driveMan.JoyXRaw);
 		SmartDashboard::PutNumber("JoyYRaw", driveMan.JoyYRaw);
