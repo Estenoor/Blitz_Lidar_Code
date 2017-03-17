@@ -6,31 +6,32 @@
  */
 #include "WPILib.h"
 #include "cameraManager.hpp"
-#include "CameraServer.h"
-#include "IterativeRobot.h"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/core/core.hpp"
-#include "opencv2/core/types.hpp"
 
-void FRC::cameraManager::VisionThread()
+FRC::cameraManager::cameraManager() :
+	table(),
+	driveMan()
 {
-	cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera("10.51.48.11");
-	camera.SetResolution(640,480);
-	camera.SetFPS(30);
-
-	cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
-	cs::CvSource outputStream = CameraServer::GetInstance()->PutVideo("Rectangle", 640, 480);
-	cv::Mat mat;
-
-	while (true)
-	{
-		if (cvSink.GrabFrame(mat) == 0)
-		{
-			outputStream.NotifyError(cvSink.GetError());
-			continue;
-		}
-		rectangle(mat, cv::Point(100, 100), cv::Point(400, 400), cv::Scalar(255,255,255), 5);
-		outputStream.PutFrame(mat);
-	}
+	table = NetworkTable::GetTable("SmartDashboard");
 }
 
+double FRC::cameraManager::getDistFromCenter() {
+	table = NetworkTable::GetTable("SmartDashboard");
+	return table->GetNumber("CENTER", -1) - 240;
+}
+
+void FRC::cameraManager::centerWithTape() {
+	while(!(getDistFromCenter() > -10 && getDistFromCenter() < 10)) {
+		if (getDistFromCenter() > 10) {
+			driveMan.mecanumDrive(-.2, 0, 0, false);
+		}
+		if (getDistFromCenter() < -10) {
+			driveMan.mecanumDrive(.2, 0, 0, false);
+		}
+	}
+	driveMan.mecanumDrive(0, 0, 0, false);
+}
+
+void FRC::cameraManager::sendBack() {
+	table = NetworkTable::GetTable("SmartDashboard");
+	table->PutNumber("CENTER2", table->GetNumber("RUN_TIME", -1));
+}

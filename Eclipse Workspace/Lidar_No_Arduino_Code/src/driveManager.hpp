@@ -6,29 +6,27 @@
 #include <wpilib.h>
 #include <CanTalon.h>
 #include "AHRS.h"
+namespace FRC {
 
-namespace FRC
-{
-	class driveManager
-	{
+	class driveManager {
 		public:
 		//Declare Objects
 		driveManager();
 		CANTalon leftBackM, leftFrontM, rightBackM, rightFrontM; //enc: 3024 counts / 1 rev
 		AHRS ahrs;
 		FRC::inputManager inputManager;
-
 		//Declare Functions
 		void PIcorrection(int id);
 		void mecanumDrive(double x, double y, double rotate, bool bypass);
 		void ramp();
-		void straightDrive(double PreAngle);
-		double getEncDistance();
+		void straightDrive(double PreAngle, double x, double y);
+		double getDistance();
 		void resetEnc();
 		void driveDistance(double distance);
 		void rotate(double degrees);
+		void FieldControl(double x, double y, double rotate);
+		//void autoTurn(float angle)
 		int getAngle();
-
 		//JoySticks
 		double JoyX;
 		double JoyY;
@@ -36,15 +34,18 @@ namespace FRC
 		double JoyXRaw;
 		double JoyYRaw;
 		double JoyRotateRaw;
-
-		//straight Drive
 		double speeds[4];
 		double Angle;
-		double angleDelta;
+		double zachG;
 		double rotation;
+		double mrKrack = .075;
 		double delta = 0;
 		double Multiplier[4];
+		double pi = 3.14159265359;
+		double ang;
 		int dir = 1;
+		bool bypassing;
+		double maxMagnitude;
 
 		//PIcorrection
 		double EncoderFreq[4];
@@ -56,7 +57,17 @@ namespace FRC
 		double PIout[4];
 		double PWMout[4];
 		bool intReset = false;
+		double preSpeed[4];
+
+		private:
 	};
 }
 
+
+
+
 #endif
+
+
+
+

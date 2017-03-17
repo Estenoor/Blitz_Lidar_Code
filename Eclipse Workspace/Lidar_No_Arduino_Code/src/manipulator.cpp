@@ -1,49 +1,45 @@
 #include "WPILib.h"
 #include "manipulator.hpp"
-
+#include "inputManager.hpp"
 FRC::manipulator::manipulator():
-
-//Set Object Ports
+//Declare Object Ports
 gear(5),
-ball(0),
 GearSwitch(0),
-climbMotor(2)
+ball(1),
+climbMotor(2),
+inputManager(),
+pot(0)
+
 {
 
 }
 
-void FRC::manipulator::climb()
-{
+void FRC::manipulator::climb(){
+	if(inputManager.xBox.GetRawAxis(2) > .8){
 		climbMotor.Set(1);
+	}else{
+		climbMotor.Set(.1);
+	}
 }
 
-void FRC::manipulator::GearReset(double speed)
-{
-	if(GearSwitch.Get())
-	{
-		gear.Set(speed * .25);
-	}
-	else if(!GearSwitch.Get())
-	{
-		gear.SetEncPosition(0);
+void FRC::manipulator::GearReset(double speed){
+	if(pot.GetValue() > 12){ //change number for constraints
+		gear.Set(speed * 0.30);
+	}else{
 		gear.Set(0);
 	}
 }
 
-void FRC::manipulator::GearOut(double speed)
-{
-	if(gear.GetEncPosition() > -350)
-	{
-		gear.Set(speed * .75);
+void FRC::manipulator::GearOut(double speed){
+	if(pot.GetValue() < 3900){ //change number for constraints
+		gear.Set(speed * 0.5);
 	}
-	else
-	{
+	else{
 		gear.Set(0);
 	}
 }
 
-void FRC::manipulator::ballEject()
-{
+void FRC::manipulator::ballEject(){
 	ball.Set(0.7);
 }
 

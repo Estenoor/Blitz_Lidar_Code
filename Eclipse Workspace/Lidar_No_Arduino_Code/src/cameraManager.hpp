@@ -6,16 +6,18 @@
  */
 #ifndef SRC_CAMERAMANAGER_HPP_
 #define SRC_CAMERAMANAGER_HPP_
-
 #include "WPILib.h"
+#include "driveManager.hpp"
 
-namespace FRC
-{
-	class cameraManager
-	{
+namespace FRC {
+	class cameraManager {
 	public:
 		cameraManager();
-		void VisionThread();
+		std::shared_ptr<NetworkTable> table;
+		FRC::driveManager driveMan;
+		double getDistFromCenter();
+		void centerWithTape();
+		void sendBack();
 	};
 }
 #endif /* SRC_CAMERAMANAGER_HPP_ */
