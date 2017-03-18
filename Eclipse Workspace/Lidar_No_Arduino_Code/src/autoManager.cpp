@@ -18,14 +18,15 @@
 
 FRC::autoManager::autoManager() :
 
-driveManager(),
-Auto(3)
+Auto(3),
+driveManager()
 
 {
 
 }
 
-double FRC::autoManager::getEncDistance(){
+double FRC::autoManager::getEncDistance()
+{
 	double leftFront = (driveManager.leftFrontM.GetEncPosition()/3024)* 2.0943951024;
 	double leftBack = (driveManager.leftBackM.GetEncPosition()/3024)* 2.0943951024;
 	double rightFront = -((driveManager.rightFrontM.GetEncPosition()/3024)* 2.0943951024);
@@ -42,22 +43,32 @@ double FRC::autoManager::getEncDistance(){
 }
 
 
-void FRC::autoManager::driveDistance(double distance, double angle){
-	if(distance > getEncDistance()){
+void FRC::autoManager::driveDistance(double distance, double angle)
+{
+	if(distance > getEncDistance())
+	{
 		driveManager.mecanumDrive(0, .3, 0, false);
 		//driveManager.straightDrive(angle, 0, .5);
-	}else{
+	}
+	else
+	{
 		driveManager.mecanumDrive(0, 0, 0, false);
 		//driveManager.straightDrive(angle, 0, 0);
 	}
 }
 
-void FRC::autoManager::rotate(double degrees){
-	if(driveManager.getAngle() < degrees-2  && driveManager.getAngle() > (degrees - 180)){
+void FRC::autoManager::rotate(double degrees)
+{
+	if(driveManager.getAngle() < degrees-2  && driveManager.getAngle() > (degrees - 180))
+	{
 		driveManager.mecanumDrive(0, 0, .3, false);
-	}else if(driveManager.getAngle() < degrees-2  && driveManager.getAngle() < (degrees - 180)){
+	}
+	else if(driveManager.getAngle() < degrees-2  && driveManager.getAngle() < (degrees - 180))
+	{
 		//mecanumDrive(0, 0, -.3, false);
-	}else{
+	}
+	else
+	{
 		driveManager.mecanumDrive(0, 0, 0, false);
 	}
 }

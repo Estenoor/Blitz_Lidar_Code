@@ -7,12 +7,13 @@
 #include "inputManager.hpp"
 
 
-namespace FRC {
-
-	class manipulator {
+namespace FRC
+{
+	class manipulator
+	{
 		public:
 			manipulator();
-			//Gear functions
+
 			FRC::inputManager inputManager;
 			CANTalon gear;
 			Talon ball, climbMotor;
@@ -25,16 +26,7 @@ namespace FRC {
 			void GearOut(double speed);
 			void ballEject();
 			void climb();
-
-		private:
-
 	};
 }
 
-
-
 #endif
-
-
-
-

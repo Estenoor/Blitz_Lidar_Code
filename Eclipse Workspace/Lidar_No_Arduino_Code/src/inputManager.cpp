@@ -17,9 +17,11 @@ double FRC::inputManager::joystickRadians()
 		return (atan(-JoyStick.GetY()/-JoyStick.GetX())+1.5708);
 	}
 	else if(JoyStick.GetX()<0)
+	{
 		return (atan(-JoyStick.GetY()/-JoyStick.GetX())+2.3562);
-
-	else{
+	}
+	else
+	{
 		return 0;
 	}
 }

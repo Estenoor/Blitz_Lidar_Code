@@ -4,22 +4,16 @@
 #include <cmath>
 
 
-namespace FRC {
-
-	class inputManager {
+namespace FRC
+{
+	class inputManager
+	{
 		public:
 			inputManager();
-			//Declares objects
 			Joystick JoyStick, xBox;
 			double joystickRadians();
-			//Declare Functions
-			//R.I.P. inputManager functions
-
-
 	};
 }
-
-
 
 #endif
 

@@ -1,4 +1,3 @@
-
 #ifndef SRC_DRIVEMANAGER_HPP_
 #define SRC_DRIVEMANAGER_HPP_
 
@@ -6,15 +5,22 @@
 #include <wpilib.h>
 #include <CanTalon.h>
 #include "AHRS.h"
-namespace FRC {
 
-	class driveManager {
+namespace FRC
+{
+	class driveManager
+	{
 		public:
+
 		//Declare Objects
 		driveManager();
-		CANTalon leftBackM, leftFrontM, rightBackM, rightFrontM; //enc: 3024 counts / 1 rev
+		CANTalon leftBackM;		//enc: 3024 counts / 1 rev
+		CANTalon leftFrontM;	//enc: 3024 counts / 1 rev
+		CANTalon rightBackM;	//enc: 3024 counts / 1 rev
+		CANTalon rightFrontM; 	//enc: 3024 counts / 1 rev
 		AHRS ahrs;
 		FRC::inputManager inputManager;
+
 		//Declare Functions
 		void PIcorrection(int id);
 		void mecanumDrive(double x, double y, double rotate, bool bypass);
@@ -27,6 +33,7 @@ namespace FRC {
 		void FieldControl(double x, double y, double rotate);
 		//void autoTurn(float angle)
 		int getAngle();
+
 		//JoySticks
 		double JoyX;
 		double JoyY;
@@ -34,6 +41,7 @@ namespace FRC {
 		double JoyXRaw;
 		double JoyYRaw;
 		double JoyRotateRaw;
+
 		double speeds[4];
 		double Angle;
 		double zachG;
@@ -58,16 +66,7 @@ namespace FRC {
 		double PWMout[4];
 		bool intReset = false;
 		double preSpeed[4];
-
-		private:
 	};
 }
 
-
-
-
 #endif
-
-
-
-

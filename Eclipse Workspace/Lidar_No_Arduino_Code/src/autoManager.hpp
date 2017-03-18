@@ -13,9 +13,10 @@
 #include <wpilib.h>
 #include <CanTalon.h>
 #include "AHRS.h"
-namespace FRC{
-
-	class autoManager{
+namespace FRC
+{
+	class autoManager
+	{
 		public:
 		autoManager();
 		Joystick Auto;
@@ -24,15 +25,7 @@ namespace FRC{
 		double getEncDistance();
 		void driveDistance(double distance, double angle);
 		void rotate(double degrees);
-
-		private:
 	};
-
-
-
-
-
-
 }
 
 
