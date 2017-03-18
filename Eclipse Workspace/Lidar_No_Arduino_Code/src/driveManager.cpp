@@ -203,17 +203,17 @@ void FRC::driveManager::resetEnc(){
 
 void FRC::driveManager::FieldControl(double x, double y, double rotate){
 	double r = sqrt(pow(x, 2) + pow(y, 2));
-
 	if(inputManager.JoyStick.GetDirectionDegrees() < 0){
 		ang = 360 + inputManager.JoyStick.GetDirectionDegrees();
 	}else{
 		ang = inputManager.JoyStick.GetDirectionDegrees();
 	}
 
+
 	ang -= getAngle();
 
-	y = r * cos(ang * (pi/180));
-	x = r * sin(ang * (pi/180));
+	x = r * cos(ang * (pi/180));
+	y= r * sin(ang * (pi/180));
 
-	mecanumDrive(y, x, rotate, false);
+	mecanumDrive(-y, -x, rotate, false);
 }

@@ -5,7 +5,6 @@
 #include "manipulator.hpp"
 #include "cameraManager.hpp"
 #include "autoManager.hpp"
-#include "Lidar_Manager_V2.hpp"
 
 class Robot: public SampleRobot
 {
@@ -14,7 +13,6 @@ class Robot: public SampleRobot
 	FRC::manipulator manipulator;
 	FRC::autoManager autoMan;
 	FRC::cameraManager cameraMan;
-	FRC::LidarManager Lidar;
 	//Relay spike;
 	Timer *lightTimer;
 
@@ -24,125 +22,59 @@ public:
 		driveMan(),
 		manipulator(),
 		autoMan(),
-		cameraMan(),
-		Lidar()
+		cameraMan()
 //spike(0)
 {
 
 }
-	void Autonomous()
-	{
+	void Autonomous(){
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
 		bool gotAngle = false;
-		double Angle = 0;
+		double Angle = driveMan.getAngle();
 		driveMan.resetEnc();
-		bool step1 = true;
-		bool step2 = false;
-		bool step3 = false;
-		double autoJoystick = 0.5;
+		int step = 1;
+		double time = 0;
 
-		while (IsAutonomous() && IsEnabled())
-		{
-			SmartDashboard::PutNumber("average distance", autoMan.getEncDistance());
+		while (IsAutonomous() && IsEnabled()){
 
-			double controlLimit = Lidar.ProportionalSlowAntiDavid(9, 3);
+			Wait(.005);
+			time += .005;
 
-			if (autoJoystick > controlLimit)
-			{
-				autoJoystick = controlLimit;
-			}
-
-			if(autoMan.Auto.GetRawButton(1) && !autoMan.Auto.GetRawButton(2) && !autoMan.Auto.GetRawButton(3))
-			{
-				if(!gotAngle)
-				{
-					Angle = driveMan.getAngle();
-					gotAngle = true;
+			if(autoMan.Auto.GetRawButton(1) && !autoMan.Auto.GetRawButton(2) && !autoMan.Auto.GetRawButton(3)){
+				if(step == 1 && time < 5){
+					driveMan.straightDrive(Angle, 0, .3);
+				}else if(step == 1){
+					step = 2;
+					driveMan.mecanumDrive(0, 0, 0, false);
 				}
 
-				if(autoMan.getEncDistance() < 18.5 && step1)
-				{
-					autoMan.driveDistance(18.5, Angle);
+				if(step == 2 && driveMan.getAngle() < 115){
+					driveMan.mecanumDrive(0, 0, .5, false);
+				}else if(step == 2 ){
+					step = 3;
+					driveMan.mecanumDrive(0, 0, 0, false);
 				}
-				else
-				{
-					step1 = false;
+				//camera then lidar
+			}else if(!autoMan.Auto.GetRawButton(1) && autoMan.Auto.GetRawButton(2) && !autoMan.Auto.GetRawButton(3)){
+
+				//camera then lidar
+			}else if(!autoMan.Auto.GetRawButton(1) && !autoMan.Auto.GetRawButton(2) && autoMan.Auto.GetRawButton(3)){
+				if(step == 1 && time < 5){
+					driveMan.straightDrive(Angle, 0, .3);
+				}else if(step == 1){
+					step = 2;
+					driveMan.mecanumDrive(0, 0, 0, false);
 				}
 
-				if(fabs(driveMan.getAngle()) < 120 - 3 && step2)
-				{
-					autoMan.rotate(120);
-					gotAngle = false;
-					driveMan.resetEnc();
+				if(step == 2 && driveMan.getAngle() < 235){
+					driveMan.mecanumDrive(0, 0, .5, false);
+				}else if(step == 2){
+					step = 3;
+					driveMan.mecanumDrive(0, 0, 0, false);
 				}
-				else
-				{
-					step2 = false;
-				}
+				//camera then lidar
 
-				if(autoMan.getEncDistance() < 9 && step3)
-				{
-					autoMan.driveDistance(9, Angle);
-				}
-				else
-				{
-					step3 = false;
-				}
-			}
-			else if(!autoMan.Auto.GetRawButton(1) && true && !autoMan.Auto.GetRawButton(3))
-			{
-				if(!gotAngle)
-				{
-					Angle = driveMan.getAngle();
-					gotAngle = true;
-				}
-
-				if(autoMan.getEncDistance() < .5 && step1)
-				{
-					autoMan.driveDistance(.5, Angle);
-				}
-				else
-				{
-					step1 = false;
-				}
-			}
-			else if(!autoMan.Auto.GetRawButton(1) && !autoMan.Auto.GetRawButton(2) && autoMan.Auto.GetRawButton(3))
-			{
-				if(!gotAngle)
-				{
-					Angle = driveMan.getAngle();
-					gotAngle = true;
-				}
-
-				if(autoMan.getEncDistance() < 18.5 && step1)
-				{
-					autoMan.driveDistance(18.5, Angle);
-				}
-				else
-				{
-					step1 = false;
-				}
-
-				if(fabs(driveMan.getAngle()) > 240 + 3 && step2)
-				{
-					autoMan.rotate(240);
-					gotAngle = false;
-					driveMan.resetEnc();
-				}
-				else
-				{
-					step2 = false;
-				}
-
-				if(autoMan.getEncDistance() < 9 && step3)
-				{
-					autoMan.driveDistance(9, Angle);
-				}
-				else
-				{
-					step3 = false;
-				}
 			}
 		}
 	}
@@ -225,15 +157,14 @@ public:
 			//drive code
 			driveMan.ramp();
 
-//			if((inputMan.JoyStick.GetDirectionDegrees()>-15 && inputMan.JoyStick.GetDirectionDegrees()<15) || (inputMan.JoyStick.GetDirectionDegrees()>165 && inputMan.JoyStick.GetDirectionDegrees()<195))
-//			{
-//				if(inputMan.JoyStick.GetRawAxis(0)>0)
-//					driveMan.straightDrive(0, 0, driveMan.JoyY);
-//				else if(inputMan.JoyStick.GetRawAxis(0)<0)
-//					driveMan.straightDrive(180, 0, driveMan.JoyY);
-//			}
-			if(inputMan.JoyStick.GetRawButton(12))
-			{
+			//			if((inputMan.JoyStick.GetDirectionDegrees()>-15 && inputMan.JoyStick.GetDirectionDegrees()<15) || (inputMan.JoyStick.GetDirectionDegrees()>165 && inputMan.JoyStick.GetDirectionDegrees()<195))
+			//			{
+			//				if(inputMan.JoyStick.GetRawAxis(0)>0)
+			//					driveMan.straightDrive(0, 0, driveMan.JoyY);
+			//				else if(inputMan.JoyStick.GetRawAxis(0)<0)
+			//					driveMan.straightDrive(180, 0, driveMan.JoyY);
+			//			}
+			if(inputMan.JoyStick.GetRawButton(12)) {
 				cameraMan.centerWithTape();
 			}
 			else if(inputMan.JoyStick.GetRawButton(2))
@@ -241,14 +172,10 @@ public:
 			else if(inputMan.JoyStick.GetRawButton(1)){
 				driveMan.straightDrive(CurrAngle, driveMan.JoyX, driveMan.JoyY);
 				hello = true;
-			}
-			else if(inputMan.JoyStick.GetRawButton(3))
-			{
+			}else if(inputMan.JoyStick.GetRawButton(3)){
 				driveMan.straightDrive(CurrAngle, 0, .6);
 				//driveMan.mecanumDrive(.2, 0 , 0, false);
-			}
-			else if(inputMan.JoyStick.GetRawButton(4))
-			{
+			}else if(inputMan.JoyStick.GetRawButton(4)){
 				driveMan.straightDrive(CurrAngle, 0, -.6);
 				//driveMan.mecanumDrive(-.2, 0, 0, false);
 			}else if(inputMan.JoyStick.GetRawButton(7)){
@@ -343,10 +270,10 @@ public:
 			//			SmartDashboard::PutNumber("zachG", driveMan.rotation);
 			//			SmartDashboard::PutNumber("PreAngle", CurrAngle);
 			SmartDashboard::PutNumber("joy angle", inputMan.joystickRadians());
-//			SmartDashboard::PutNumber("Angle Rate", driveMan.ahrs.GetRate());
-//
-//			SmartDashboard::PutBoolean("toggleOn", toggleOn);
-//
+			//			SmartDashboard::PutNumber("Angle Rate", driveMan.ahrs.GetRate());
+			//
+			//			SmartDashboard::PutBoolean("toggleOn", toggleOn);
+			//
 			SmartDashboard::PutNumber("leftFront Encoder", driveMan.leftFrontM.GetEncVel());
 			SmartDashboard::PutNumber("leftBack Encoder", driveMan.leftBackM.GetEncVel());
 			SmartDashboard::PutNumber("RightFront Encoder", driveMan.rightFrontM.GetEncVel());
