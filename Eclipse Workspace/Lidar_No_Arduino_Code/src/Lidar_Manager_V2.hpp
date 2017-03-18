@@ -35,7 +35,7 @@ namespace FRC
 		LidarManager();
 		double getLidDistance();
 		void antiDavid(int offset, double slowPoint);
-		void ProportionalSlowAntiDavid(double setPoint, double proportionalGain, double speed);
+		double ProportionalSlowAntiDavid(double startLimit, double endLimit);
 	};
 }
 

@@ -35,20 +35,27 @@ double FRC::LidarManager::getLidDistance()
 	return (distCent / 100); //Converts centimeters into meters
 }
 
-void FRC::LidarManager::ProportionalSlowAntiDavid(double setPoint, double proportionalGain, double speed)
+double FRC::LidarManager::ProportionalSlowAntiDavid(double startLimit, double endLimit)
 {
-	if (getLidDistance() <= 9)
+	double range = startLimit - endLimit;
+	double output;
+	double distance = getLidDistance();
+	double processVariable = distance - endLimit;
+	if (distance <= 9 && distance >= 3)
 	{
-		do
-		{
-			int processVariable = getLidDistance();
-			double error = setPoint - processVariable;
-			double output = (proportionalGain * error) * (-1 * speed);
-			driveManager.mecanumDrive(0, output, 0.00, true);
-		}
-		while(getLidDistance() >= 3);
-		driveManager.mecanumDrive(0, 0, 0, true);
+		output = (processVariable / range);
 	}
+	else if(processVariable > 9)
+	{
+		output = 1;
+	}
+	else
+	{
+		output = 0;
+	}
+	SmartDashboard::PutNumber("Control Limit", output);
+	SmartDashboard::PutNumber("Lidar Distance", getLidDistance());
+	return output;
 }
 
 //Stops Robot from running into a wall/flat surface
